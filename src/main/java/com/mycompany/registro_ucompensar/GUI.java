@@ -4,7 +4,6 @@
  */
 package com.mycompany.registro_ucompensar;
 import java.io.*;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
@@ -192,13 +191,13 @@ public class GUI extends javax.swing.JFrame {
         removeAllRows(model);
 
         // Variables para calcular el total a pagar y el número de adultos
-        String infoToShow = "";
+        StringBuilder infoToShow = new StringBuilder();
         double totalToPay = 0;
         int totalAdults = 0;
 
         // Itera sobre cada visitante para agregar sus datos a la tabla y calcular el total a pagar y el número de adultos
         for(Person visitor : visitors){
-            infoToShow += String.format("%s: %.2f$\n", visitor.getName(), visitor.getEntryValue());
+            infoToShow.append(String.format("%s: %.2f$\n", visitor.getName(), visitor.getEntryValue()));
             totalToPay += visitor.getEntryValue();
 
             // Agrega la nueva fila a la tabla
@@ -210,10 +209,10 @@ public class GUI extends javax.swing.JFrame {
         }
 
         // Crea un mensaje de resumen con el total a pagar y la cantidad de adultos y menores de edad
-        infoToShow += String.format("Total a pagar: %.2f\nVisitantes: %d\nTotal Adultos: %d\nTotal Menores de Edad: %d",visitors.length, totalToPay, totalAdults, (visitors.length-totalAdults));
+        infoToShow.append(String.format("Total a pagar: %.2f\nVisitantes: %d\nTotal Adultos: %d\nTotal Menores de Edad: %d", totalToPay, visitors.length, totalAdults, (visitors.length - totalAdults)));
 
         // Muestra el mensaje de resumen en un cuadro de diálogo
-        JOptionPane.showMessageDialog(rootPane, infoToShow, "Resumen", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(rootPane, infoToShow.toString(), "Resumen", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_createRecordBtnActionPerformed
 
     /**
@@ -346,11 +345,11 @@ public class GUI extends javax.swing.JFrame {
     }
 
     public String parseRecordText(Person[] visitors){
-        String data = "Nombre\t| N° Identificación\t| Edad\t| Categoría\t| Entrada\n";
-        for (int i = 0; i < visitors.length; i++){
-            data += visitors[i].showInformation() + "\n";
+        StringBuilder data = new StringBuilder("Nombre\t| N° Identificación\t| Edad\t| Categoría\t| Entrada\n");
+        for (Person visitor : visitors) {
+            data.append(visitor.showInformation()).append("\n");
         }
-        return data;
+        return data.toString();
     }
     /**
      * Clase para instanciar una persona con las características necesarias para crear un registro
@@ -432,7 +431,7 @@ public class GUI extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
