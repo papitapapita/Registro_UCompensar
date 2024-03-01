@@ -313,33 +313,46 @@ public class GUI extends javax.swing.JFrame {
     }
 
     /**
-     * Descripción: Función que guarda en un archivo nuevo un registro de visitantes
-     * @param visitors array de personas del registro de una visita
-     * */
+     * Guarda un registro de visitantes en un archivo seleccionado por el usuario.
+     * Muestra un mensaje de confirmación una vez que el archivo se ha guardado correctamente.
+     * Si no hay ningún registro para guardar o si se produce un error, muestra un mensaje de error correspondiente.
+     * @param visitors El array de personas del registro de una visita.
+     */
     public void saveRecord(Person[] visitors){
         try{
-            if(tableOutput.getRowCount() > 0){
-                JFileChooser jFileChooser = new JFileChooser();
-                int result = jFileChooser.showSaveDialog(rootPane);
-                if(result == JFileChooser.APPROVE_OPTION){
-                    File file = jFileChooser.getSelectedFile();
-                    System.out.println(file.getAbsolutePath());
-                    String data = parseRecordText(visitors);
-                    System.out.println(data);
-                    FileWriter fileWriter = new FileWriter(file);
-                    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                    PrintWriter writer = new PrintWriter(bufferedWriter);
-                    writer.write(data);
-                    writer.close();
-                    bufferedWriter.close();
-                    JOptionPane.showMessageDialog(rootPane, "Archivo guardado exitósamente");
-                }else{
-                    throw new IOException("No se pudo seleccionar el archivo");
-                }
-            }else{
+            // Verifica si hay registros para guardar en la tabla
+            if(tableOutput.getRowCount() <= 0){
                 throw new IOException("No hay registro para guardar");
             }
+
+            // Crea un nuevo JFileChooser para que el usuario seleccione la ubicación y el nombre del archivo
+            JFileChooser jFileChooser = new JFileChooser();
+            int result = jFileChooser.showSaveDialog(rootPane);
+
+            // Si el usuario selecciona un archivo y hace clic en "Guardar" correctamente
+            if(result == JFileChooser.APPROVE_OPTION){
+                File file = jFileChooser.getSelectedFile();
+
+                // Crea una cadena de texto con los datos de los visitantes
+                String data = parseRecordText(visitors);
+
+                // Crea un FileWriter, un BufferedWriter y un PrintWriter para escribir los datos en el archivo
+                try (FileWriter fileWriter = new FileWriter(file);
+                     BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                     PrintWriter writer = new PrintWriter(bufferedWriter)){
+
+                    // Escribe los datos en el archivo
+                    writer.write(data);
+
+                    // Muestra un mensaje de confirmación
+                    JOptionPane.showMessageDialog(rootPane, "Archivo guardado exitósamente");
+                }
+            }else{
+                // Si el usuario cancela la operación, muestra un mensaje indicando que no se pudo seleccionar el archivo
+                throw new IOException("No se pudo seleccionar el archivo");
+            }
         }catch(IOException e){
+            // Si se produce un error, muestra un mensaje de error con la descripción del problema
             JOptionPane.showMessageDialog(rootPane,"Error al guardar el archivo: " + e.getMessage());
         }
     }
