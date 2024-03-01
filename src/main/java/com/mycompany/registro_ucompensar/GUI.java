@@ -357,15 +357,26 @@ public class GUI extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Genera una cadena de texto formateada con la información de los visitantes para ser escrita en un archivo.
+     * @param visitors El array de personas del registro de una visita.
+     * @return Una cadena de texto con la información formateada de los visitantes.
+     */
     public String parseRecordText(Person[] visitors){
+        // StringBuilder para construir la cadena de texto
         StringBuilder data = new StringBuilder("Nombre\t| N° Identificación\t| Edad\t| Categoría\t| Entrada\n");
+
+        // Itera sobre cada visitante para agregar su información formateada a la cadena de texto
         for (Person visitor : visitors) {
+            // Agrega la información del visitante y un salto de línea al StringBuilder
             data.append(visitor.showInformation()).append("\n");
         }
+
+        // Convierte el StringBuilder a una cadena de texto y la devuelve
         return data.toString();
     }
     /**
-     * Clase para instanciar una persona con las características necesarias para crear un registro
+     * Clase que representa a una persona con información básica para crear un registro.
      */
     public static class Person {
         private String name;
@@ -373,6 +384,14 @@ public class GUI extends javax.swing.JFrame {
         private short age;
         private char membershipCategory;
         private double entryValue;
+
+        /**
+         * Constructor de la clase Person.
+         * @param name Nombre de la persona.
+         * @param id Identificación de la persona.
+         * @param age Edad de la persona.
+         * @param membershipCategory Categoría de afiliación de la persona.
+         */
         public Person(String name, int id, short age, char membershipCategory){
             this.name = name;
             this.id = id;
@@ -380,6 +399,9 @@ public class GUI extends javax.swing.JFrame {
             this.membershipCategory = membershipCategory;
             calculateEntryValue();
         }
+
+        // Métodos getters y setters para los atributos
+
         String getName(){
             return this.name;
         }
@@ -407,32 +429,26 @@ public class GUI extends javax.swing.JFrame {
         }
         private void setEntryValue(double entreValue){ this.entryValue = entreValue; }
 
+        /**
+         * Método para calcular el valor de la entrada según la edad y la categoría de afiliación.
+         */
         void calculateEntryValue(){
             final double GENERAL_ENTRY_VALUE = 30000.0;
             final double[][] MEMBERSHIP_VALUE = {
                     {65.0, GENERAL_ENTRY_VALUE * .85},
                     {66.0, GENERAL_ENTRY_VALUE * .7},
-                    {67.0, GENERAL_ENTRY_VALUE * .7},
-                    {78.0, GENERAL_ENTRY_VALUE},
+                    {67.0, GENERAL_ENTRY_VALUE * .5},
+                    {78.0, GENERAL_ENTRY_VALUE}
             };
             if(this.getAge() < 18){
                 this.setEntryValue(5000);
             }else if(this.getAge() >= 18){
-                this.setEntryValue(MEMBERSHIP_VALUE[this.getMembershipCategory()][1]);
-                /*switch(this.getMembershipCategory()){
-                    case 'A':
-                        this.setEntryValue(GENERAL_ENTRY_VALUE * .85);
+                for(double[] value : MEMBERSHIP_VALUE){
+                    if(value[0] == this.getMembershipCategory()){
+                        this.setEntryValue(value[1]);
                         break;
-                    case 'B':
-                        this.setEntryValue(GENERAL_ENTRY_VALUE * .7);
-                        break;
-                    case 'C':
-                        this.setEntryValue(GENERAL_ENTRY_VALUE * .5);
-                        break;
-                    default:
-                        this.setEntryValue(GENERAL_ENTRY_VALUE);
-                        break;
-                }*/
+                    }
+                }
             }
         }
 
