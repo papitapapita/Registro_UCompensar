@@ -276,10 +276,10 @@ public class GUI extends javax.swing.JFrame {
 
     // Métodos auxiliares para solicitar información de cada visitante
     private int getNumberOfVisitors(){
-        return Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Nombre: " ));
+        return Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Número de Visitantes: " ));
     }
     private String getVisitorName(int index){return JOptionPane.showInputDialog(rootPane, String.format("Nombre del visitante %d", index));}
-    private int getVisitorId(int index){return Integer.parseInt(JOptionPane.showInputDialog(rootPane, String.format("Id del visitante %d", index)));}
+    private int getVisitorId(int index){return Integer.parseInt(JOptionPane.showInputDialog(rootPane, String.format("Número de Identificación del visitante %d", index)));}
     private short getVisitorsAge(int index){return Short.parseShort(JOptionPane.showInputDialog(rootPane, String.format("Edad del visitante %d", index)));}
     private char getMembershipCategory(int index){
         char membershipCategory;
