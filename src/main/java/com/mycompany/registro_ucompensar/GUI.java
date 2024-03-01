@@ -244,7 +244,7 @@ public class GUI extends javax.swing.JFrame {
     public Person[] createVisitorsRecord(){
         try{
             // Solicita al usuario la cantidad de personas que se registrarán
-            int amountPeople = Integer.parseInt(JOptionPane.showInputDialog(rootPane, "¿Cuántas personas se registrarán?"));
+            int amountPeople = getNumberOfVisitors();
 
             //Verifica si se ingresó al menos una persona para el registro
             if(amountPeople <= 0){
@@ -256,29 +256,43 @@ public class GUI extends javax.swing.JFrame {
             Person[] visitors = new Person[amountPeople];
             for(int i = 0; i < amountPeople; i++) {
                 JOptionPane.showMessageDialog(rootPane, "Datos del visitante " + (i+1), "Visitante " + (i+1), JOptionPane.INFORMATION_MESSAGE);
-                //String name =
-                int id = Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Número de Identificación: ")); //Variable temporal para el número de identificación
-                short age = Short.parseShort(JOptionPane.showInputDialog(rootPane, "Edad: ")); //Variable temporal para la edad del visitante
-                char membershipCategory = JOptionPane.showInputDialog(rootPane, "Categoría de Afilicación\nCategoría A: \"A\"\nCategoría B: \"B\"\nCategoría C: \"C\"\nNo está afiliado: \"N\" ").toUpperCase().charAt(0);
-                while (membershipCategory != 'A' && membershipCategory != 'B' && membershipCategory != 'C' && membershipCategory != 'N') {
-                    JOptionPane.showMessageDialog(rootPane, "Ingresaste un valor erróneo, intenta de nuevo.", "Error", 0);
-                    membershipCategory = JOptionPane.showInputDialog(rootPane, "Categoría de Afilicación\nCategoría A: \"A\"\nCategoría B: \"B\"\nCategoría C: \"C\"\nNo está afiliado: \"N\" ").toUpperCase().charAt(0);
-                }
-                //visitors[i] = new Person(name, id, age, membershipCategory);
+
+                // Solicita la información de cada visitante
+                String name = getVisitorName(i+1);
+                int id = getVisitorId(i+1);
+                short age = getVisitorsAge(i+1);
+                char membershipCategory = getMembershipCategory(i+1);
+
+                // Crea un objeto Person con la información del visitante y lo agrega al array de visitantes
+                visitors[i] = new Person(name, id, age, membershipCategory);
             }
-            return visitors;
+            return visitors; // Retorna el array de visitantes
         }catch(Exception e) {
+            // Si ocurre un error durante la creación del registro, muestra un mensaje de error y retorna null
             System.out.println(e.getMessage());
-            JOptionPane.showMessageDialog(rootPane, "Ingresaste un valor erróneo, intenta de nuevo");
+            JOptionPane.showMessageDialog(rootPane, "Ha ocurrido un error al crear el registro de visitantes. Por favor, intenta nuevamente.");
             return null;
         }
     }
 
     // Métodos auxiliares para solicitar información de cada visitante
-    public int getNumberOfVisitors(){
+    private int getNumberOfVisitors(){
         return Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Nombre: " ));
     }
-
+    private String getVisitorName(int index){return JOptionPane.showInputDialog(rootPane, String.format("Nombre del visitante %d", index));}
+    private int getVisitorId(int index){return Integer.parseInt(JOptionPane.showInputDialog(rootPane, String.format("Id del visitante %d", index)));}
+    private short getVisitorsAge(int index){return Short.parseShort(JOptionPane.showInputDialog(rootPane, String.format("Edad del visitante %d", index)));}
+    private char getMembershipCategory(int index){
+        char membershipCategory;
+        do{
+            String input = JOptionPane.showInputDialog(rootPane, String.format("Categoría de Afilicación del visitante %d\nCategoría A: \"A\"\nCategoría B: \"B\"\nCategoría C: \"C\"\nNo está afiliado: \"N\" ", index));
+            membershipCategory = input.toUpperCase().charAt(0);
+            if (membershipCategory != 'A' && membershipCategory != 'B' && membershipCategory != 'C' && membershipCategory != 'N') {
+                JOptionPane.showMessageDialog(rootPane, "Ingresaste un valor erróneo, intenta de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }while(membershipCategory != 'A' && membershipCategory != 'B' && membershipCategory != 'C' && membershipCategory != 'N');
+        return membershipCategory;
+    }
     /**
      * Elimina todas las filas existentes en el modelo de la tabla.
      * @param model El modelo de la tabla
