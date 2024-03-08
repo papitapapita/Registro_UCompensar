@@ -7,20 +7,24 @@ import java.io.*;
 import javax.swing.JOptionPane;
 import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 
 /**
  *
  * @author Jonathan D. R. Olivos
  */
 public class GUI extends javax.swing.JFrame {
-
+    // ArrayList auxiliar para guardar a los visitantes de cada registro
+    ArrayList<Person> visitors = new ArrayList<>();
+    // Variable auxiliar para determinar si el registro ya finalizó antes de guardar
+    Boolean isRecordFinished = false;
     /**
      * Creates new form GUI
      */
-    Person[] visitors;
     public GUI() {
         initComponents();
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -35,22 +39,28 @@ public class GUI extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        createRecordBtn = new javax.swing.JButton();
         exitBtn = new javax.swing.JButton();
-        saveRecordBtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableOutput = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jSpinner1 = new javax.swing.JSpinner();
+        userNameInput = new javax.swing.JTextField();
+        userIdInput = new javax.swing.JTextField();
+        addVisitorBtn = new javax.swing.JButton();
+        userMembershipCategoryInput = new javax.swing.JComboBox<>();
+        userAgeInput = new javax.swing.JSpinner();
         jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        totalToPayOutput = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        totalVisitorsOutput = new javax.swing.JTextField();
+        finishRecordBtn = new javax.swing.JButton();
+        deleteVisitorBtn = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        createNewRecordBtn = new javax.swing.JMenuItem();
+        saveRecordBtn = new javax.swing.JMenuItem();
 
         jRadioButtonMenuItem1.setSelected(true);
         jRadioButtonMenuItem1.setText("jRadioButtonMenuItem1");
@@ -82,24 +92,10 @@ public class GUI extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        createRecordBtn.setText("Crear Nuevo Registro");
-        createRecordBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createRecordBtnActionPerformed(evt);
-            }
-        });
-
         exitBtn.setText("Salir");
         exitBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitBtnActionPerformed(evt);
-            }
-        });
-
-        saveRecordBtn.setText("Guardar Registro");
-        saveRecordBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveRecordBtnActionPerformed(evt);
             }
         });
 
@@ -144,103 +140,159 @@ public class GUI extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Categoría Afilicación");
 
-        jButton1.setText("Agregar Visitante");
+        addVisitorBtn.setText("Agregar Visitante");
+        addVisitorBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addVisitorBtnActionPerformed(evt);
+            }
+        });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "D" }));
+        userMembershipCategoryInput.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "No Aplica" }));
+
+        userAgeInput.setModel(new javax.swing.SpinnerNumberModel(Short.valueOf((short)0), Short.valueOf((short)0), Short.valueOf((short)150), Short.valueOf((short)1)));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Total a Pagar");
 
-        jTextField1.setEditable(false);
+        totalToPayOutput.setEditable(false);
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel7.setText("Total Visitantes");
+
+        totalVisitorsOutput.setEditable(false);
+
+        finishRecordBtn.setText("Finalizar Registro");
+        finishRecordBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                finishRecordBtnActionPerformed(evt);
+            }
+        });
+
+        deleteVisitorBtn.setText("Borrar Visitante");
+        deleteVisitorBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteVisitorBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addComponent(exitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21))
+                .addGap(381, 381, 381)
+                .addComponent(addVisitorBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(299, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(userAgeInput, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel2)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(userMembershipCategoryInput, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel5)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel4))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(jLabel2)
+                                    .addGap(44, 44, 44)
+                                    .addComponent(userNameInput, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel5)
-                                        .addComponent(jLabel3)
-                                        .addComponent(jLabel4))
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addGap(44, 44, 44)
-                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                        .addGap(123, 123, 123)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(createRecordBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(saveRecordBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(21, 21, 21))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32))))
+                                    .addComponent(userIdInput, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addGap(314, 314, 314))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(378, 378, 378)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(25, 25, 25)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(finishRecordBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel7)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(deleteVisitorBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel6)))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(totalToPayOutput)
+                                    .addComponent(totalVisitorsOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))))
+                        .addGap(29, 29, 29))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addGap(21, 21, 21))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(exitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(50, 50, 50)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addComponent(createRecordBtn))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))))
+                    .addComponent(userNameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(saveRecordBtn))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(userAgeInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(userIdInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(userMembershipCategoryInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)))
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(26, 26, 26)
+                .addGap(27, 27, 27)
+                .addComponent(addVisitorBtn)
+                .addGap(35, 35, 35)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addComponent(exitBtn)
+                    .addComponent(totalToPayOutput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteVisitorBtn))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(totalVisitorsOutput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(exitBtn)
+                    .addComponent(finishRecordBtn))
                 .addGap(16, 16, 16))
         );
+
+        jMenu1.setText("Archivo");
+
+        createNewRecordBtn.setText("Crear Nuevo Registro");
+        createNewRecordBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createNewRecordBtnActionPerformed(evt);
+            }
+        });
+        jMenu1.add(createNewRecordBtn);
+
+        saveRecordBtn.setText("Guardar Registro");
+        saveRecordBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveRecordBtnActionPerformed(evt);
+            }
+        });
+        jMenu1.add(saveRecordBtn);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -253,54 +305,13 @@ public class GUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(0, 0, 0)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Método llamado cuando se hace clic en el botón para crear un nuevo registro de visitantes.
-     * Crea un nuevo registro de visitantes y muestra un resumen en un cuadro de diálogo.
-     * Elimina todas las filas existentes en la tabla antes de agregar las nuevas.
-     * @param evt El evento que desencadenó la acción
-     */
-    private void createRecordBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createRecordBtnActionPerformed
-        // Obtiene el modelo de la tabla
-        DefaultTableModel model = (DefaultTableModel) tableOutput.getModel();
-
-        // Crea un nuevo registro de visitantes
-        visitors = createVisitorsRecord();
-
-        // Elimina todas las filas existentes en la tabla
-        removeAllRows(model);
-
-        // Variables para calcular el total a pagar y el número de adultos
-        StringBuilder infoToShow = new StringBuilder();
-        double totalToPay = 0;
-        int totalAdults = 0;
-
-        // Itera sobre cada visitante para agregar sus datos a la tabla y calcular el total a pagar y el número de adultos
-        for(Person visitor : visitors){
-            infoToShow.append(String.format("%s: %.2f$\n", visitor.getName(), visitor.getEntryValue()));
-            totalToPay += visitor.getEntryValue();
-
-            // Agrega la nueva fila a la tabla
-            addRowToTable(model, visitor);
-
-            // Incrementa el contador de adultos si el visitante es mayor de edad
-            if(visitor.getAge() >= 18)
-                totalAdults++;
-        }
-
-        // Crea un mensaje de resumen con el total a pagar y la cantidad de adultos y menores de edad
-        infoToShow.append(String.format("Total a pagar: %.2f\nVisitantes: %d\nTotal Adultos: %d\nTotal Menores de Edad: %d", totalToPay, visitors.length, totalAdults, (visitors.length - totalAdults)));
-
-        // Muestra el mensaje de resumen en un cuadro de diálogo
-        JOptionPane.showMessageDialog(rootPane, infoToShow.toString(), "Resumen", JOptionPane.INFORMATION_MESSAGE);
-    }//GEN-LAST:event_createRecordBtnActionPerformed
 
     /**
      * Método llamado cuando se hace clic en el botón para salir del programa.
@@ -313,90 +324,156 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_exitBtnActionPerformed
 
     /**
-     * Método llamado cuando se hace clic en el botón para guardar el registro en pantalla
+     * Método llamado cuando se hace clic en el botón para crear un nuevo registro de visitantes.
+     * Crea un nuevo registro de visitantes y elimina todas las filas existentes en la tabla antes de agregar las nuevas.
      * @param evt El evento que desencadenó la acción
      */
-    private void saveRecordBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveRecordBtnActionPerformed
-        // Guarda el registro en un archivo
-        saveRecord(visitors);
+    private void createNewRecordBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewRecordBtnActionPerformed
+        // Marcar el registro como no finalizado
+        isRecordFinished = false;
+
+        // Inicializar la lista de visitantes
+        visitors = new ArrayList<Person>();
+
+        // Se habilitan los campos de entrada de datos y los botones relevantes
+        enableInputs(true);
+
+        // Limpia los campos de entrada de datos
+        clearFields();
+
+        // Obtiene el modelo de la tabla
+        DefaultTableModel model = (DefaultTableModel) tableOutput.getModel();
+
+        // Elimina todas las filas existentes en la tabla
+        removeAllRows(model);
+
+    }//GEN-LAST:event_createNewRecordBtnActionPerformed
+
+    /**
+     * Método llamado cuando se hace clic en el botón para guardar el registro en pantalla.
+     * Guarda el registro en un archivo si el registro está finalizado; de lo contrario, muestra un mensaje de error.
+     * @param evt El evento que desencadenó la acción.
+     */
+    private void saveRecordBtnActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            // Verifica si el registro está finalizado
+            if (isRecordFinished) {
+                // Guarda el registro en un archivo
+                saveRecord(visitors);
+            } else {
+                // Muestra un mensaje de error si el registro no está finalizado
+                throw new IllegalStateException("El registro no está finalizado");
+            }
+        } catch (IllegalStateException e) {
+            // Muestra un mensaje de error si el registro no está finalizado
+            JOptionPane.showMessageDialog(rootPane, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_saveRecordBtnActionPerformed
 
     /**
-     * Crea un registro de visitantes solicitando información al usuario a través de cuadros de diálogo.
-     * Retorna un array de objetos Person con los datos de los visitantes.
-     * Si ocurre un error durante la creación del registro, muestra un mensaje de error y retorna null.
-     * @return Un array de objetos Person con los datos de los visitantes, o null si ocurre un error.
+     * Método llamado cuando se hace clic en el botón para agregar un nuevo visitante.
+     * Agrega un nuevo visitante utilizando el método addVisitor().
+     * @param evt El evento que desencadenó la acción.
      */
-    public Person[] createVisitorsRecord(){
+    private void addVisitorBtnActionPerformed(java.awt.event.ActionEvent evt) {
+        addVisitor(); // Invoca el método para agregar un visitante
+    }//GEN-LAST:event_addVisitorBtnActionPerformed
+
+    /**
+     * Método llamado cuando se hace clic en el botón para finalizar el registro de visitantes.
+     * Calcula el total a pagar, el número total de visitantes, el número de adultos y el número de menores de edad,
+     * muestra esta información en la interfaz de usuario y deshabilita los campos y botones relevantes.
+     * @param evt El evento que desencadenó la acción.
+     */
+    private void finishRecordBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishRecordBtnActionPerformed
         try{
-            // Solicita al usuario la cantidad de personas que se registrarán
-            int amountPeople = getNumberOfVisitors();
-
-            //Verifica si se ingresó al menos una persona para el registro
-            if(amountPeople <= 0){
-                JOptionPane.showMessageDialog(rootPane, "Debe ingresar al menos una persona para el registro");
-                return null;
+            // Verifica si no hay ningún visitante registrado
+            if(tableOutput.getRowCount() == 0){
+                throw new IllegalStateException("No hay ningún visitante registrado");
             }
 
-            // Crea un array para almacenar los visitantes
-            Person[] visitors = new Person[amountPeople];
-            for(int i = 0; i < amountPeople; i++) {
-                JOptionPane.showMessageDialog(rootPane, "Datos del visitante " + (i+1), "Visitante " + (i+1), JOptionPane.INFORMATION_MESSAGE);
+            // Deshabilita los campos de entrada de datos y los botones relevantes
+            enableInputs(false);
 
-                // Solicita la información de cada visitante
-                String name = getVisitorName(i+1);
-                int id = getVisitorId(i+1);
-                short age = getVisitorsAge(i+1);
-                char membershipCategory = getMembershipCategory(i+1);
-
-                // Crea un objeto Person con la información del visitante y lo agrega al array de visitantes
-                visitors[i] = new Person(name, id, age, membershipCategory);
+            // Calcula el total a pagar, el número total de visitantes, el número de adultos y el número de menores de edad
+            double totalToPay = 0;
+            int adultsCount = 0;
+            for(Person visitor : visitors){
+                totalToPay += visitor.getEntryValue();
+                if(visitor.getAge() >= 18)
+                    adultsCount++;
             }
-            return visitors; // Retorna el array de visitantes
-        }catch(Exception e) {
-            // Si ocurre un error durante la creación del registro, muestra un mensaje de error y retorna null
-            System.out.println(e.getMessage());
-            JOptionPane.showMessageDialog(rootPane, "Ha ocurrido un error al crear el registro de visitantes. Por favor, intenta nuevamente.");
-            return null;
+
+            // Muestra la información calculada en la interfaz de usuario
+            totalToPayOutput.setText(String.format("%.2f", totalToPay));
+            totalVisitorsOutput.setText(String.valueOf(visitors.size()));
+            JOptionPane.showMessageDialog(rootPane, String.format("Total a pagar: %.2f\nVisitantes: %d\nTotal Adultos: %d\nTotal Menores de Edad: %d", totalToPay, visitors.size(), adultsCount, (visitors.size() - adultsCount)));
+
+            // Marca el registro como finalizado
+            isRecordFinished = true;
+        }catch(IllegalStateException e){
+            // Muestra un mensaje de error si no hay ningún visitante registrado
+            JOptionPane.showMessageDialog(rootPane, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }//GEN-LAST:event_finishRecordBtnActionPerformed
+
+    /**
+     * Método llamado cuando se hace clic en el botón para eliminar un visitante seleccionado.
+     * Elimina el visitante seleccionado de la lista de visitantes y de la tabla.
+     * @param evt El evento que desencadenó la acción.
+     */
+    private void deleteVisitorBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteVisitorBtnActionPerformed
+        try{
+            // Obtiene el índice de la fila seleccionada en la tabla
+            int selectedRow = tableOutput.getSelectedRow();
+
+            // Obtiene el modelo de la tabla
+            DefaultTableModel model = (DefaultTableModel) tableOutput.getModel();
+
+            // Verifica si se ha seleccionado una fila
+            if(selectedRow != -1){
+                // Elimina el visitante correspondiente a la fila seleccionada de la lista de visitantes
+                visitors.removeIf(visitor -> visitor.getId() == model.getValueAt(selectedRow, 1));
+
+                // Elimina la fila seleccionada de la tabla
+                model.removeRow(selectedRow);
+            }else{
+                // Muestra un mensaje de error si no se ha seleccionado ninguna fila
+                throw new IllegalStateException("No hay una fila seleccionada");
+            }
+        } catch (IllegalStateException e) {
+            JOptionPane.showMessageDialog(rootPane, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_deleteVisitorBtnActionPerformed
+
+    /**
+     * Método que limpia los campos de entrada de datos en la interfaz de usuario.
+     */
+    private void clearFields(){
+        // Limpia el campo de nombre de usuario
+        userNameInput.setText("");
+
+        // Limpia el campo de identificación de usuario
+        userIdInput.setText("");
+
+        // Restablece el valor del campo de edad de usuario a cero
+        userAgeInput.setValue(0);
+
+        // Limpia el campo de salida de total a pagar
+        totalToPayOutput.setText("");
+
+        // Limpia el campo de salida de total de visitantes
+        totalVisitorsOutput.setText("");
     }
 
-    // Métodos auxiliares para solicitar información de cada visitante
-    private int getNumberOfVisitors(){
-        return Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Número de Visitantes: " ));
-    }
-    private String getVisitorName(int index){return JOptionPane.showInputDialog(rootPane, String.format("Nombre del visitante %d", index));}
-    private int getVisitorId(int index){return Integer.parseInt(JOptionPane.showInputDialog(rootPane, String.format("Número de Identificación del visitante %d", index)));}
-    private short getVisitorsAge(int index){return Short.parseShort(JOptionPane.showInputDialog(rootPane, String.format("Edad del visitante %d", index)));}
-    private char getMembershipCategory(int index){
-        char membershipCategory;
-        do{
-            String input = JOptionPane.showInputDialog(rootPane, String.format("Categoría de Afilicación del visitante %d\nCategoría A: \"A\"\nCategoría B: \"B\"\nCategoría C: \"C\"\nNo está afiliado: \"N\" ", index));
-            membershipCategory = input.toUpperCase().charAt(0);
-            if (membershipCategory != 'A' && membershipCategory != 'B' && membershipCategory != 'C' && membershipCategory != 'N') {
-                JOptionPane.showMessageDialog(rootPane, "Ingresaste un valor erróneo, intenta de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }while(membershipCategory != 'A' && membershipCategory != 'B' && membershipCategory != 'C' && membershipCategory != 'N');
-        return membershipCategory;
-    }
     /**
      * Elimina todas las filas existentes en el modelo de la tabla.
      * @param model El modelo de la tabla
      */
-    public void removeAllRows(DefaultTableModel model){
+    private void removeAllRows(DefaultTableModel model){
         while(model.getRowCount() > 0){
             model.removeRow(0);
         }
-    }
-
-    /**
-     * Agrega una nueva fila a la tabla con los datos del visitante.
-     * @param model El modelo de la tabla
-     * @param visitor El visitante cuyos datos se agregarán a la tabla
-     */
-    public void addRowToTable(DefaultTableModel model, Person visitor){
-        Object[] newRowData = {visitor.getName(), visitor.getId(), visitor.getAge(), (visitor.getMembershipCategory() == 'N')?"No Aplica":visitor.getMembershipCategory(), visitor.getEntryValue()};
-        model.addRow(newRowData);
     }
 
     /**
@@ -405,7 +482,7 @@ public class GUI extends javax.swing.JFrame {
      * Si no hay ningún registro para guardar o si se produce un error, muestra un mensaje de error correspondiente.
      * @param visitors El array de personas del registro de una visita.
      */
-    public void saveRecord(Person[] visitors){
+    public void saveRecord(ArrayList<Person> visitors){
         try{
             // Verifica si hay registros para guardar en la tabla
             if(tableOutput.getRowCount() <= 0){
@@ -445,13 +522,70 @@ public class GUI extends javax.swing.JFrame {
     }
 
     /**
+     * Método para agregar un nuevo visitante a la lista de visitantes y actualizar la tabla.
+     * Este método obtiene los datos del nuevo visitante de los campos de entrada de datos en la interfaz de usuario,
+     * los valida y luego agrega el visitante a la lista de visitantes y actualiza la tabla.
+     * @throws NumberFormatException si los datos ingresados no son válidos para convertir a los tipos requeridos.
+     */
+    private void addVisitor(){
+        try{
+            // Obtener los datos del nuevo visitante de los campos de entrada de datos en la interfaz de usuario
+            String name = userNameInput.getText();
+            String id = String.valueOf(Long.parseLong(userIdInput.getText()));
+            short age = Short.parseShort(userAgeInput.getValue().toString());
+            char membershipCategory = userMembershipCategoryInput.getSelectedItem().toString().charAt(0);
+
+            // Crear un nuevo objeto Person con los datos del visitante
+            Person visitor = new Person(name, id, age,membershipCategory);
+
+            // Agregar el nuevo visitante a la lista de visitantes
+            visitors.add(visitor);
+
+            // Agregar una nueva fila a la tabla con los datos del nuevo visitante
+            addRowToTable(visitor);
+
+            // Limpiar los campos de entrada de datos después de agregar el visitante
+            clearFields();
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(rootPane, "Has ingresado un dato erróneamente. Por favor intenta de nuevo ","Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Método para habilitar o deshabilitar los campos de entrada de datos y los botones de acción en la interfaz de usuario.
+     * @param value Booleano que indica si se deben habilitar (true) o deshabilitar (false) los campos y botones.
+     */
+    private void enableInputs(Boolean value){
+        // Habilitar los campos de entrada de datos
+        userNameInput.setEnabled(value);
+        userIdInput.setEnabled(value);
+        userAgeInput.setEnabled(value);
+        userMembershipCategoryInput.setEnabled(value);
+
+        // Habilitar los botones de acción
+        addVisitorBtn.setEnabled(value);
+        deleteVisitorBtn.setEnabled(value);
+        finishRecordBtn.setEnabled(value);
+    }
+
+    /**
+     * Agrega una nueva fila a la tabla con los datos del visitante.
+     * @param visitor El visitante cuyos datos se agregarán a la tabla
+     */
+    private void addRowToTable(Person visitor){
+        DefaultTableModel model = (DefaultTableModel) tableOutput.getModel();
+        Object[] newRowData = {visitor.getName(), visitor.getId(), visitor.getAge(), (visitor.getMembershipCategory() == 'N')?"No Aplica":visitor.getMembershipCategory(), visitor.getEntryValue()};
+        model.addRow(newRowData);
+    }
+
+    /**
      * Genera una cadena de texto formateada con la información de los visitantes para ser escrita en un archivo.
      * @param visitors El array de personas del registro de una visita.
      * @return Una cadena de texto con la información formateada de los visitantes.
      */
-    public String parseRecordText(Person[] visitors){
+    public String parseRecordText(ArrayList<Person> visitors){
         // StringBuilder para construir la cadena de texto
-        StringBuilder data = new StringBuilder("Nombre\t| N° Identificación\t| Edad\t| Categoría\t| Entrada\n");
+        StringBuilder data = new StringBuilder("Nombre\t| N°Identificación\t| Edad\t| Categoría\t| Entrada\n");
 
         // Itera sobre cada visitante para agregar su información formateada a la cadena de texto
         for (Person visitor : visitors) {
@@ -499,25 +633,31 @@ public class GUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton createRecordBtn;
+    private javax.swing.JButton addVisitorBtn;
+    private javax.swing.JMenuItem createNewRecordBtn;
+    private javax.swing.JButton deleteVisitorBtn;
     private javax.swing.JButton exitBtn;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton finishRecordBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JButton saveRecordBtn;
+    private javax.swing.JMenuItem saveRecordBtn;
     private javax.swing.JTable tableOutput;
+    private javax.swing.JTextField totalToPayOutput;
+    private javax.swing.JTextField totalVisitorsOutput;
+    private javax.swing.JSpinner userAgeInput;
+    private javax.swing.JTextField userIdInput;
+    private javax.swing.JComboBox<String> userMembershipCategoryInput;
+    private javax.swing.JTextField userNameInput;
     // End of variables declaration//GEN-END:variables
 }
